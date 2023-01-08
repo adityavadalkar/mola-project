@@ -4,7 +4,7 @@ const langdetect = require('langdetect');
 const Sentiment = require('sentiment');
 
 const app = express();
-
+const PORT = process.env.PORT || 8080
 app.use(bodyParser.json());
 
 app.post('/api/language-detection', (req, res) => {
@@ -18,6 +18,7 @@ app.post('/api/sentiment-score', (req, res) => {
   const tweetText = req.body.tweet_text;
   var sentiment = new Sentiment();
   const analysis = sentiment.analyze(tweetText);
+  console.log(analysis)
   var mood;
   if(analysis.score>0){
     mood = "POSITIVE"
@@ -33,6 +34,6 @@ app.post('/api/sentiment-score', (req, res) => {
   });
 });
 
-app.listen(8000, () => {
+app.listen(PORT, () => {
   console.log('Server listening on port 8000');
 });
