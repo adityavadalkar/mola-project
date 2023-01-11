@@ -11,7 +11,7 @@
     
     const handleLanguageDetectionResponse = (response) => {
     // Filter English tweets
-        console.log("response ",response)
+        // console.log("response ",response)
         const englishTweets = response.filter(r => r.is_english);
         const ind = [];
         response.forEach((res, i) => {
@@ -35,26 +35,38 @@
     const handleSentimentScoreResponse = (response, indices) => {
     // TODO: Add emojis next to the dates of the tweets
         var elems = document.querySelectorAll('[data-testid="User-Names"]')
-        var mood;
+        var mood, i=0;
         const sep = `<div dir="ltr" aria-hidden="true" class="css-901oao r-1bwzh9t r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>`
         // console.log("Response length ", response.results.length)
         // console.log("indices", indices)
-        indices.forEach(ind => {
-            // console.log(`Hello ${ind} ${JSON.stringify(response.results[ind])}`)
-            switch(response.results[ind].detected_mood) {
-                case "pos":
-                    mood = `😊`
-                    break;
-                case "neg":
-                    mood = `☹️`
-                    break;
-                case "neu":
-                    mood = `😐`
-                    break;
-                default:
+        for(ind of indices) {
+            try{
+                // console.log(elems[ind])
+                switch(response.results[i].detected_mood) {
+                    case "pos":
+                        mood = `😊`
+                        break;
+                    case "neg":
+                        mood = `☹️`
+                        break;
+                    case "neu":
+                        mood = `😐`
+                        break;
+                    default:
+                }
+                if(elems[ind].children[3] != undefined){
+                    continue;
+                }
+                elems[ind].innerHTML += sep + `<div class="css-4rbku5 css-18t94o4 css-901oao r-1bwzh9t r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0" id="mola">Detected Mood: ${mood}</div>`
             }
-            elems[ind].innerHTML += sep + `<div class="css-4rbku5 css-18t94o4 css-901oao r-1bwzh9t r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0">Detected Mood: ${mood}</div>`
-        })
+            catch(e){
+                // console.log("FAILED AT")
+                // console.log(`Hello ${ind} ${JSON.stringify(response.results[ind])}`)
+                console.log(e)
+                console.log(elems.length, ind)
+            }
+            i++;
+        }
     }
     var elems = document.querySelectorAll('[data-testid="tweetText"]')
     var tweets = [];
